@@ -1,5 +1,13 @@
 [
-    { "name": "Netflix", "price": 10 },
-    { "name": "Apple Music", "price": 12 },
-    { "name": "Spotify", "price": 15 }
+    { "name": "Netflix", "price": 13 },
+    { "name": "Apple Music", "price": 10 },
+    { "name": "Spotify", "price": 10 },
+    { "name": "Hulu", "price": 12 },
+    { "name": "Amazon Prime", "price": 13 },
+    { "name": "Disney Plus", "price": 7 },
+    { "name": "Apple TV+", "price": 5 },
+    { "name": "CBS All Access", "price": 6 },
+    { "name": "HBO max", "price": 15 },
+    { "name": "Amazon Music", "price": 13 },
+    { "name": "SiriusXM", "price": 10 }
 ]
