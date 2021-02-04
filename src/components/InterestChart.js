@@ -22,7 +22,7 @@ export default {
         },
         intervals: {
             type: Array,
-            default: () => [5, 10, 15, 20, 25, 30, 35, 40]
+            default: () => [5.0, 10.0, 15.0, 20.0, 25.0, 30.0]
         }
     },
     data() {
@@ -71,7 +71,7 @@ export default {
     },
     methods: {
         compoundInterest (monthlyIncrement, rate, years) {
-            return ((monthlyIncrement * ((1+rate)**years)) / rate).toFixed(2)
+            return ((monthlyIncrement * 12) * (((1 + rate)**(years)-1)/(rate))).toFixed(2)
         }
     }
 }

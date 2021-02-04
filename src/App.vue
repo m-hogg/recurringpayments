@@ -1,22 +1,61 @@
 <template>
-  <v-app>
+  <v-app @keyup.stop="1">
     <v-container fluid style="height: 100vh" class="grey darken-3">
       <v-row class="fill-height justify-center align-center">
-        <v-col cols="6">
+        <v-col cols="4" class="flex-shrink-1">
           <v-window v-model="window">
+            <v-window-item>
+              <v-card>
+                  <v-card-title>
+                    How much do you want to save per month?
+                  </v-card-title>
+                  <v-card-text>
+                    <v-text-field
+                      v-model="amount"
+                      autofocus
+                      @keyup.enter.stop="(amountValid && amount) ? window++ : null"
+                      prepend-icon="mdi-currency-usd"
+                      :rules="[
+                        str => {
+                          if (typeof str != 'string') return false
+                          if(str === '') return true
+                          return !isNaN(str) && !isNaN(parseFloat(str)) ? true : `How are you going to save ${str} dollars?`
+                        }
+                      ]"
+                    />
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn @click="window++" :disabled="!amountValid || !amount" block color="primary">
+                      Next
+                    </v-btn>
+                  </v-card-actions>
+              </v-card>
+            </v-window-item>
 
             <v-window-item>
-              <v-card class="pa-5" max-height="600px">
-                <v-card-title>Do you have any of these subscriptions?</v-card-title>
-                <v-card-subtitle>Total: ${{ cost }}</v-card-subtitle>
-                <v-card-text style="overflow-y: scroll; height: 300px">
-                  <template v-for="(subscription, index) in subscriptions">
-                    <v-checkbox v-model="selected" :key="index" :label="subscription.name" :value="subscription" />
-                  </template>
-                </v-card-text>
-                <v-card-actions>
-                  <v-btn block color="primary" @click="window++">Next</v-btn>
-                </v-card-actions>
+              <v-card>
+                  <v-card-title>
+                    How many years do you want to save for?
+                  </v-card-title>
+                  <v-card-text>
+                    <v-text-field
+                      v-model="years"
+                      autofocus
+                      @keyup.enter.stop="(amountValid && amount) ? window++ : null"
+                      :rules="[
+                        str => {
+                          if (typeof str != 'string') return false
+                          if(str === '') return true
+                          return !isNaN(str) && !isNaN(parseFloat(str)) ? true : `How are you going to save for ${str} years?`
+                        }
+                      ]"
+                    />
+                  </v-card-text>
+                  <v-card-actions>
+                    <v-btn @click="window++" :disabled="!yearsValid || !amount" block color="primary">
+                      Next
+                    </v-btn>
+                  </v-card-actions>
               </v-card>
             </v-window-item>
 
@@ -26,10 +65,10 @@
                   Your results
                 </v-card-title>
                 <v-card-subtitle>
-                  Those subscriptions cost you ${{ cost }} per month. How much would you have if you invested that?
+                  If you invested ${{ amount }} per month for {{ years }} years, here's how much you would have!
                 </v-card-subtitle>
                 <v-card-text>
-                  <sub-cost-chart :cost-per-month="cost" />
+                  <interest-chart :cost-per-month="Number(amount)" :intervals="intervals"  />
                 </v-card-text>
               </v-card>
             </v-window-item>
@@ -42,28 +81,45 @@
 </template>
 
 <script>
-import subscriptions from './subscriptions.json'
-import SubCostChart from './components/SubCostChart.js'
+import InterestChart from './components/InterestChart.js'
 
 export default {
   name: 'App',
   components: {
-    SubCostChart
+    InterestChart
   },
   data() {
     return {
-      subscriptions,
-      selected: [],
+      amount: null,
+      years: null,
       window: 0
     }
   },
   computed: {
-    cost () {
-      let cost = 0
-      this.selected.forEach(el => {
-        cost += el.price
-      })
-      return cost
+    amountValid () {
+      if (typeof this.amount != 'string') return false
+      if(this.amount === '') return false
+      return !isNaN(this.amount) && !isNaN(parseFloat(this.amount))
+    },
+
+    yearsValid () {
+      if (typeof this.years != 'string') return false
+      if(this.years === '') return false
+      return !isNaN(this.years) && !isNaN(parseFloat(this.years))
+    },
+
+    intervals () {
+      const intervals = []
+      if (!this.years) return [5, 10, 15]
+
+      let i = 0
+      while (i < Number(this.years)) {
+        intervals.push(i)
+        i += 5
+      }
+      intervals.push(Number(this.years))
+
+      return intervals
     }
   },
 }
