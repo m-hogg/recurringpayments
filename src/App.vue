@@ -2,11 +2,11 @@
   <v-app @keyup.stop="1">
     <v-container fluid style="height: 100vh" class="grey darken-3">
       <v-row class="fill-height justify-center align-center">
-        <v-col cols="4" class="flex-shrink-1">
+        <v-col :cols="$vuetify.breakpoint.xsOnly ? 12 : 4">
           <v-window v-model="window">
             <v-window-item>
               <v-card>
-                  <v-card-title>
+                  <v-card-title style="word-break: keep-all">
                     How much do you want to save per month?
                   </v-card-title>
                   <v-card-text>
@@ -34,7 +34,7 @@
 
             <v-window-item>
               <v-card>
-                  <v-card-title>
+                  <v-card-title style="word-break: keep-all">
                     How many years do you want to save for?
                   </v-card-title>
                   <v-card-text>
@@ -60,7 +60,7 @@
             </v-window-item>
 
             <v-window-item>
-              <v-card max-height="600px">
+              <v-card max-height="600px" style="word-break: keep-all">
                 <v-card-title>
                   Your results
                 </v-card-title>
@@ -94,6 +94,9 @@ export default {
       years: null,
       window: 0
     }
+  },
+  mounted () {
+    console.log(this.$vuetify);
   },
   computed: {
     amountValid () {
